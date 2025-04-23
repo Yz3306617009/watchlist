@@ -59,14 +59,24 @@ def forge():
     db.session.commit()
     click.echo('Done.')
 
+@app.context_processor#模板上下文处理函数,,这样不同页面的模板用到的相同数据就不用反复调数据库
+def inject_user():
+    user = User.query.first()
+    return dict(user=user)# # 需要返回字典，等同于 return {'user': user}
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
 @app.route('/index')
 @app.route('/home')
 @app.route('/')#路由的作用就是将这些 URL 与处理这些请求的函数关联起来。  一个视图函数也可以绑定多个 URL，这通过附加多个装饰器实现
 def index():
-    user = User.query.first()  # 读取用户记录
+    user = User.query.first()  # 读取用户记录，，，有上下文处理函数就不用这句了
     movies = Movie.query.all()  # 读取所有电影记录
     # return '<h1>Hello Totoro!</h1><img src="http://helloflask.com/totoro.gif">'
-    return render_template('/index.html', name=user, movies=movies)#render_template() 函数可以把模板渲染出来，必须传入的参数为模板文件名（相对于 templates 根目录的文件路径），这里即 'index.html'。为了让模板正确渲染，我们还要把模板内部使用的变量通过关键字参数传入这个函数
+    return render_template('/index.html', movies=movies)#render_template() 函数可以把模板渲染出来，必须传入的参数为模板文件名（相对于 templates 根目录的文件路径），这里即 'index.html'。为了让模板正确渲染，我们还要把模板内部使用的变量通过关键字参数传入这个函数
 
 
 @app.route('/user/<name>')

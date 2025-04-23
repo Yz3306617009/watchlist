@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+{#对于模板内容重复的问题，Jinja2 提供了模板继承的支持。这个机制和 Python 类继承非常类似：
+我们可以定义一个父模板，一般会称之为基模板（base template）。基模板中包含完整的 HTML 结构和导航栏、页首、页脚等通用部分。
+在子模板里，我们可以使用 extends 标签来声明继承自某个基模板。
+基模板中需要在实际的子模板中追加或重写的部分则可以定义成块（block）。
+块使用 block 标签创建， {% block 块名称 %} 作为开始标记，{% endblock %} 或 {% endblock 块名称 %} 作为结束标记。
+通过在子模板里定义一个同样名称的块，你可以向基模板的对应块位置追加或重写内容。#}
+<html lang="en">
+<head>
+    {% block head %}
+    <meta charset="utf-8">
+    {#<meta> 元素，这个元素会设置页面的视口，让页面根据设备的宽度来自动缩放页面，这样会让移动设备拥有更好的浏览体验：#}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ user.name }}'s Watchlist</title>
+    <link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css">
+    {% endblock %}
+</head>
+<body>
+    <h2>
+        <img alt="Avatar" class="avatar" src="{{ url_for('static', filename='images/favicon.ico') }}">
+        {{ user.name }}'s Watchlist
+    </h2>
+    <nav>{#导航栏标签#}
+        <ul>
+            <li><a href="{{ url_for('index') }}">Home</a></li>
+        </ul>
+    </nav>
+    {% block content %}{% endblock %}
+    <footer>
+        <small>&copy; 2018 <a href="http://helloflask.com/book/3">HelloFlask</a></small>
+    </footer>
+</body>
+</html>
