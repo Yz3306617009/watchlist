@@ -1,8 +1,11 @@
 import unittest
 
-from flask import Flask
+from watchlist import app, db
+from watchlist.commands import forge, initdb
+from watchlist.models import User, Movie
 
-from app import app, db, Movie, User, forge, initdb
+
+# from app import app, db, Movie, User, forge, initdb
 
 
 class WatchlistTestCase(unittest.TestCase):
